@@ -21,7 +21,7 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
 
         var validationFailures = validationResults.SelectMany(x => x.Errors);
 
-        if (!validationResults.Any())
+        if (!validationFailures.Any())
         {
             return await next().ConfigureAwait(false);
         }

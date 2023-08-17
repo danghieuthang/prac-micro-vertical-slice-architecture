@@ -1,6 +1,6 @@
-﻿using System.Windows.Input;
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using TodoApp.Domain.Core;
 using TodoApp.Infrastructure.Core.Persistence;
 
 namespace TodoApp.Application.Core.Behaviors;
