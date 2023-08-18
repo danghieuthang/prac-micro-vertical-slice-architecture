@@ -2,23 +2,21 @@
 using Microsoft.EntityFrameworkCore;
 using TodoApp.Infrastructure.Core.Interceptors;
 
-namespace TodoApp.Product.API.Infrastructure;
+namespace TodoApp.Order.API.Infrastructure;
 
-public class ProductDbContext : DbContext
+public class OrderDbContext : DbContext
 {
-    public ProductDbContext(DbContextOptions<ProductDbContext> options) : base(options)
+    public OrderDbContext(DbContextOptions options) : base(options)
     {
         ChangeTracker.LazyLoadingEnabled = false;
         ChangeTracker.AutoDetectChangesEnabled = true;
         ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
     }
 
-    public DbSet<TodoApp.Product.Domain.Entities.Product> Products { get; set; }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.Load("TodoApp.Infrastructure.Core"));
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ProductDbContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(OrderDbContext).Assembly);
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -27,4 +25,7 @@ public class ProductDbContext : DbContext
         optionsBuilder.AddInterceptors(new CreatableEntitySaveChangeInterceptor());
         base.OnConfiguring(optionsBuilder);
     }
+
+    public DbSet<order.Order> Orders { get; set; }
+    public DbSet<order.OrderDetail> OrderDetails { get; set; }
 }
