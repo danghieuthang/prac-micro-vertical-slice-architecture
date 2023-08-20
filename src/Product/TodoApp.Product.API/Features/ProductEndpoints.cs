@@ -7,7 +7,7 @@ using TodoApp.Product.API.Features.Update;
 
 namespace TodoApp.Product.API.Features;
 
-public static class ProductEndpoint
+public static class ProductEndpoints
 {
     public static async Task<IResult> GetAsync(
        [FromServices] IMediator mediator,

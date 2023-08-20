@@ -56,10 +56,10 @@ app.UseHttpsRedirection();
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 
-app.MapGet("/api/products", ProductEndpoint.GetAsync);
-app.MapGet("/api/products/{id}", ProductEndpoint.GetByIdAsync);
-app.MapPost("/api/products", ProductEndpoint.PostAsync);
-app.MapPut("/api/products", ProductEndpoint.PutAsync);
+app.MapGet("/api/products", ProductEndpoints.GetAsync);
+app.MapGet("/api/products/{id}", ProductEndpoints.GetByIdAsync);
+app.MapPost("/api/products", ProductEndpoints.PostAsync);
+app.MapPut("/api/products", ProductEndpoints.PutAsync);
 
 await app.Services.ApplyMigrationsAsync<ProductDbContext>();
 

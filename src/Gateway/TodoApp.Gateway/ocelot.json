@@ -6,12 +6,12 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5002
+          "Port": 7233
         }
       ],
-      "UpstreamPathTemplate": "/accounts-api/api/{everything}",
+      "UpstreamPathTemplate": "/api/orders/{everything}",
       "UpstreamHttpMethod": [ "POST", "PUT", "GET", "PATCH", "DELETE" ],
-      "SwaggerKey": "accounts"
+      "SwaggerKey": "orders"
     },
     {
       "DownstreamPathTemplate": "/api/{everything}",
@@ -19,37 +19,37 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5004
+          "Port": 7040
         }
       ],
-      "UpstreamPathTemplate": "/transactions-api/api/{everything}",
-      "UpstreamHttpMethod": [ "POST", "GET" ],
-      "SwaggerKey": "transactions"
+      "UpstreamPathTemplate": "/api/products/{everything}",
+      "UpstreamHttpMethod": [ "POST", "GET", "PUT" ],
+      "SwaggerKey": "products"
     }
   ],
   "SwaggerEndPoints": [
     {
-      "Key": "accounts",
+      "Key": "orders",
       "Config": [
         {
-          "Name": "Accounts API",
+          "Name": "Order API",
           "Version": "v1",
-          "Url": "http://localhost:5002/swagger/v1/swagger.json"
+          "Url": "https://localhost:7233/swagger/v1/swagger.json"
         }
       ]
     },
     {
-      "Key": "transactions",
+      "Key": "products",
       "Config": [
         {
-          "Name": "Transactions API",
+          "Name": "Product API",
           "Version": "v1",
-          "Url": "http://localhost:5004/swagger/v1/swagger.json"
+          "Url": "https://localhost:7040/swagger/v1/swagger.json"
         }
       ]
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost"
+    "BaseUrl": "https://localhost"
   }
 }
