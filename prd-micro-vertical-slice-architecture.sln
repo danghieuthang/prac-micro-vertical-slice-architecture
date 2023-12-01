@@ -1,9 +1,12 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AA4905CD-D75F-488E-B74E-6726D74D7F93}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{BF02EFC1-421F-4B0E-B72F-99D3781BB1A0}"
 EndProject
@@ -27,11 +30,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoApp.Product.Domain", "s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoApp.Product.API", "src\Product\TodoApp.Product.API\TodoApp.Product.API.csproj", "{A33E9CC0-30A2-47BF-B622-DB72DC9DA31D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoApp.Order.Domain", "src\Order\TodoApp.Order.Domain\TodoApp.Order.Domain.csproj", "{869C88F5-53F4-41C9-83C1-4EC88F3431EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoApp.Order.Domain", "src\Order\TodoApp.Order.Domain\TodoApp.Order.Domain.csproj", "{869C88F5-53F4-41C9-83C1-4EC88F3431EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoApp.Order.API", "src\Order\TodoApp.Order.API\TodoApp.Order.API.csproj", "{FF5647BB-BDEF-4519-ADB6-A9F1E0AEFC00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoApp.Order.API", "src\Order\TodoApp.Order.API\TodoApp.Order.API.csproj", "{FF5647BB-BDEF-4519-ADB6-A9F1E0AEFC00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoApp.Gateway", "src\Gateway\TodoApp.Gateway\TodoApp.Gateway.csproj", "{28DCE21E-D253-4781-861F-CDA452C47BBE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoApp.Gateway", "src\Gateway\TodoApp.Gateway\TodoApp.Gateway.csproj", "{28DCE21E-D253-4781-861F-CDA452C47BBE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

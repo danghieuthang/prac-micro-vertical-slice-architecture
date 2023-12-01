@@ -9,7 +9,7 @@
           "Port": 7233
         }
       ],
-      "UpstreamPathTemplate": "/api/orders/{everything}",
+      "UpstreamPathTemplate": "/order-api/api/{everything}",
       "UpstreamHttpMethod": [ "POST", "PUT", "GET", "PATCH", "DELETE" ],
       "SwaggerKey": "orders"
     },
@@ -22,7 +22,7 @@
           "Port": 7040
         }
       ],
-      "UpstreamPathTemplate": "/api/products/{everything}",
+      "UpstreamPathTemplate": "/product-api/api/{everything}",
       "UpstreamHttpMethod": [ "POST", "GET", "PUT" ],
       "SwaggerKey": "products"
     }
