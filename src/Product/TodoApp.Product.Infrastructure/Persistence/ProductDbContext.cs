@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using TodoApp.Infrastructure.Core.Interceptors;
 
-namespace TodoApp.Product.API.Infrastructure;
+namespace TodoApp.Product.Infrastructure.Persistence;
 
 public class ProductDbContext : DbContext
 {
@@ -13,7 +13,7 @@ public class ProductDbContext : DbContext
         ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
     }
 
-    public DbSet<TodoApp.Product.Domain.Entities.Product> Products { get; set; }
+    public DbSet<Product.Domain.Entities.Product> Products { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

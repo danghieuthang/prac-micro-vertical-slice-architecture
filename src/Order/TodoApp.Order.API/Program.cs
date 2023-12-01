@@ -20,7 +20,7 @@ builder.Logging.ConfigureSerilogForOpenTelemetry();
 builder.Services
     .AddEndpointsApiExplorer()
     .AddSwaggerGen()
-    .AddPostgreDbContext<OrderDbContext>(
+    .AddPostgresDbContext<OrderDbContext>(
         builder.Configuration,
         builder.Configuration.GetConnectionString(nameof(OrderDbContext)),
         ServiceLifetime.Scoped,
@@ -56,7 +56,7 @@ app.UseHttpsRedirection();
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 
-app.MapPost("/api/orders", OrderEndpoints.PostAsync);
+app.MapOrderApiRoutes();
 
 await app.Services.ApplyMigrationsAsync<OrderDbContext>();
 

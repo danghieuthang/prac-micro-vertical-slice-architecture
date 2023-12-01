@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using TodoApp.Product.API.Infrastructure;
 using TodoApp.Product.Domain.Exceptions;
+using TodoApp.Product.Infrastructure.Persistence;
 
 namespace TodoApp.Product.API.Features.Update;
 

@@ -24,11 +24,11 @@ services:
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq/
     restart: always
-  product-api:
-    image: ${DOCKER_REGISTRY-}product-api
-    build:
-      context: .
-      dockerfile: src/Product/TodoApp.Product.API/Dockerfile
+  # product-api:
+  #   image: ${DOCKER_REGISTRY-}product-api
+  #   build:
+  #     context: .
+  #     dockerfile: src/Product/TodoApp.Product.API/Dockerfile
 volumes:
   rabbitmq-data:
     external: false

@@ -7,8 +7,8 @@ using TodoApp.Application.Core.Middlewares;
 using TodoApp.Infrastructure.Core.Extensions;
 using TodoApp.Infrastructure.Core.Handlers;
 using TodoApp.Product.API.Features;
-using TodoApp.Product.API.Infrastructure;
-using TodoApp.Product.API.Infrastructure.Handlers;
+using TodoApp.Product.Infrastructure.Handlers;
+using TodoApp.Product.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +20,7 @@ builder.Logging.ConfigureSerilogForOpenTelemetry();
 builder.Services
     .AddEndpointsApiExplorer()
     .AddSwaggerGen()
-    .AddPostgreDbContext<ProductDbContext>(
+    .AddPostgresDbContext<ProductDbContext>(
         builder.Configuration,
         builder.Configuration.GetConnectionString(nameof(ProductDbContext)),
         ServiceLifetime.Scoped,
@@ -56,10 +56,7 @@ app.UseHttpsRedirection();
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 
-app.MapGet("/api/products", ProductEndpoints.GetAsync);
-app.MapGet("/api/products/{id}", ProductEndpoints.GetByIdAsync);
-app.MapPost("/api/products", ProductEndpoints.PostAsync);
-app.MapPut("/api/products", ProductEndpoints.PutAsync);
+app.MapProductApiRoutes();
 
 await app.Services.ApplyMigrationsAsync<ProductDbContext>();
 
