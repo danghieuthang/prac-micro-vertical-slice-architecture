@@ -4,12 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Npgsql;
 using TodoApp.Infrastructure.Core.Persistence;
 
 namespace TodoApp.Infrastructure.Core.Extensions;
 public static class InfrastructureServiceCollectionExtensions
 {
-    public static IServiceCollection AddPostgreDbContext<TDbContext>(
+    public static IServiceCollection AddPostgresDbContext<TDbContext>(
        this IServiceCollection services,
        IConfiguration configuration,
        string? connectionString,
@@ -21,8 +22,8 @@ public static class InfrastructureServiceCollectionExtensions
             throw new InvalidOperationException($"Connection string for {nameof(TDbContext)} was not found.");
         }
 
-        var maxRetryCount = configuration.GetValue<int>("MySql:MaxRetryCount");
-        var enableSecondLevelCache = configuration.GetValue<bool>("MySql:EnableSecondLevelCache");
+        var maxRetryCount = configuration.GetValue<int>("Postgres:MaxRetryCount");
+        var enableSecondLevelCache = configuration.GetValue<bool>("Postgres:EnableSecondLevelCache");
 
         if (enableSecondLevelCache)
         {
@@ -31,11 +32,17 @@ public static class InfrastructureServiceCollectionExtensions
             );
         }
 
+        var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
+        dataSourceBuilder.EnableDynamicJson();
+        var dataSource = dataSourceBuilder.Build();
+
         services.AddDbContext<TDbContext>((provider, optionsBuilder) =>
         {
-            optionsBuilder.UseNpgsql(connectionString, options =>
+            optionsBuilder.UseNpgsql(dataSource, options =>
             {
                 options.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+                options.EnableRetryOnFailure(maxRetryCount);
+
             });
 
             optionsBuilder.EnableSensitiveDataLogging();

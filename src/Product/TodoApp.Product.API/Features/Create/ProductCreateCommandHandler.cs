@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using TodoApp.Product.API.Infrastructure;
+using TodoApp.Product.Infrastructure.Persistence;
 
 namespace TodoApp.Product.API.Features.Create;
 

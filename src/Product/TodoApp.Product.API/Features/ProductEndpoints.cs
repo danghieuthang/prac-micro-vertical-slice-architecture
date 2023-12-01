@@ -9,6 +9,16 @@ namespace TodoApp.Product.API.Features;
 
 public static class ProductEndpoints
 {
+    public static IEndpointRouteBuilder MapProductApiRoutes(this IEndpointRouteBuilder builder)
+    {
+        builder.MapGet("/api/v1/products", ProductEndpoints.GetAsync);
+        builder.MapGet("/api/v1/products/{id}", ProductEndpoints.GetByIdAsync);
+        builder.MapPost("/api/v1/products", ProductEndpoints.PostAsync);
+        builder.MapPut("/api/v1/products", ProductEndpoints.PutAsync);
+
+        return builder;
+    }
+
     public static async Task<IResult> GetAsync(
        [FromServices] IMediator mediator,
        CancellationToken cancellationToken = default)

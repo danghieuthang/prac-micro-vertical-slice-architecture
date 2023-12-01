@@ -7,20 +7,20 @@ using TodoApp.Application.Core.Middlewares;
 using TodoApp.Infrastructure.Core.Extensions;
 using TodoApp.Infrastructure.Core.Handlers;
 using TodoApp.Product.API.Features;
-using TodoApp.Product.API.Infrastructure;
-using TodoApp.Product.API.Infrastructure.Handlers;
+using TodoApp.Product.Infrastructure.Handlers;
+using TodoApp.Product.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var transactionsAssembly = typeof(Program).Assembly;
-var transactionsAssemblyName = transactionsAssembly.GetName();
+var productAssembly = typeof(Program).Assembly;
+var productAssemblyName = productAssembly.GetName();
 
 builder.Logging.ConfigureSerilogForOpenTelemetry();
 
 builder.Services
     .AddEndpointsApiExplorer()
     .AddSwaggerGen()
-    .AddPostgreDbContext<ProductDbContext>(
+    .AddPostgresDbContext<ProductDbContext>(
         builder.Configuration,
         builder.Configuration.GetConnectionString(nameof(ProductDbContext)),
         ServiceLifetime.Scoped,
@@ -34,13 +34,13 @@ builder.Services
         configuration.AddOpenBehavior(typeof(ResilientTransactionBehavior<,>));
         configuration.NotificationPublisherType = typeof(TaskWhenAllPublisher);
     })
-    .AddValidator(transactionsAssembly)
+    .AddValidator(productAssembly)
     .AddSingleton<IExceptionHandler, ExceptionHandler>()
     .AddUnitOfWork<ProductDbContext>()
     .AddOpenTelemetryConfiguration(
         serviceName: "product",
         serviceNamespace: "todo-app",
-        serviceVersion: transactionsAssemblyName.Version?.ToString() ?? null
+        serviceVersion: productAssemblyName.Version?.ToString() ?? null
     );
 
 var app = builder.Build();
@@ -56,10 +56,7 @@ app.UseHttpsRedirection();
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 
-app.MapGet("/api/products", ProductEndpoints.GetAsync);
-app.MapGet("/api/products/{id}", ProductEndpoints.GetByIdAsync);
-app.MapPost("/api/products", ProductEndpoints.PostAsync);
-app.MapPut("/api/products", ProductEndpoints.PutAsync);
+app.MapProductApiRoutes();
 
 await app.Services.ApplyMigrationsAsync<ProductDbContext>();
 

@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 using TodoApp.Infrastructure.Core.Factories;
 
-namespace TodoApp.Product.API.Infrastructure;
+namespace TodoApp.Product.Infrastructure.Persistence;
 
 public class ProductDbContextDesignTimeFactory : IDesignTimeDbContextFactory<ProductDbContext>
 {

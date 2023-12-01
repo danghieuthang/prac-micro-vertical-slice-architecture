@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace TodoApp.Product.API.Infrastructure.Mappings;
+namespace TodoApp.Product.Infrastructure.Persistence.Mappings;
 
-public class ProductEntityTypeConfiguration : IEntityTypeConfiguration<TodoApp.Product.Domain.Entities.Product>
+public class ProductEntityTypeConfiguration : IEntityTypeConfiguration<Product.Domain.Entities.Product>
 {
-    public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<TodoApp.Product.Domain.Entities.Product> builder)
+    public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<Product.Domain.Entities.Product> builder)
     {
         builder.Property(product => product.Id)
             .ValueGeneratedNever()

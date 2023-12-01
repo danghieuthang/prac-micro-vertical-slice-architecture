@@ -1,9 +1,10 @@
 ﻿using System.Net;
+using Microsoft.AspNetCore.Http;
 using TodoApp.Application.Core.Exceptions;
 using TodoApp.Infrastructure.Core.Handlers;
 using TodoApp.Product.Domain.Exceptions;
 
-namespace TodoApp.Product.API.Infrastructure.Handlers;
+namespace TodoApp.Product.Infrastructure.Handlers;
 
 public class ExceptionHandler : IExceptionHandler
 {
