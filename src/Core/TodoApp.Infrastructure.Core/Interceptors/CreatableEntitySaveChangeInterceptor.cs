@@ -5,7 +5,9 @@ using TodoApp.Domain.Core;
 namespace TodoApp.Infrastructure.Core.Interceptors;
 public class CreatableEntitySaveChangeInterceptor : SaveChangesInterceptor
 {
-    public override async ValueTask<int> SavedChangesAsync(SaveChangesCompletedEventData eventData, int result, CancellationToken cancellationToken = default)
+
+    public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result,
+        CancellationToken cancellationToken = new CancellationToken())
     {
         if (eventData == null) throw new ArgumentNullException(nameof(eventData));
 
@@ -17,7 +19,6 @@ public class CreatableEntitySaveChangeInterceptor : SaveChangesInterceptor
             entry.Entity.CreateAt = DateTime.UtcNow;
         }
 
-        return await base.SavedChangesAsync(eventData, result, cancellationToken).ConfigureAwait(false);
-
+        return await base.SavingChangesAsync(eventData, result, cancellationToken).ConfigureAwait(false);
     }
 }

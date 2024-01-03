@@ -1,11 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using TodoApp.Domain.Core;
 
 namespace TodoApp.Infrastructure.Core.Interceptors;
 public class ModifiableEntitySaveChangeInterceptor : SaveChangesInterceptor
 {
-    public override async ValueTask<int> SavedChangesAsync(SaveChangesCompletedEventData eventData, int result, CancellationToken cancellationToken = default)
+    public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result,
+        CancellationToken cancellationToken = new CancellationToken())
     {
         if (eventData == null) throw new ArgumentNullException(nameof(eventData));
 
@@ -13,11 +15,10 @@ public class ModifiableEntitySaveChangeInterceptor : SaveChangesInterceptor
 
         foreach (var entry in modifiableEntries)
         {
-            if (entry.State is not Microsoft.EntityFrameworkCore.EntityState.Modified) continue;
+            if (entry.State is not (EntityState.Modified or EntityState.Detached)) continue;
             entry.Entity.ModifiedAt = DateTime.UtcNow;
         }
 
-        return await base.SavedChangesAsync(eventData, result, cancellationToken).ConfigureAwait(false);
+        return await base.SavingChangesAsync(eventData, result, cancellationToken).ConfigureAwait(false);
     }
-
 }
