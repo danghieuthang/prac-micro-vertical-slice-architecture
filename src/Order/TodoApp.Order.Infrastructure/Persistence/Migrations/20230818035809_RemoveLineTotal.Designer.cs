@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using TodoApp.Order.API.Infrastructure;
+using TodoApp.Order.Infrastructure.Persistence;
 
 #nullable disable
 
 namespace TodoApp.Order.API.Migrations
 {
     [DbContext(typeof(OrderDbContext))]
-    [Migration("20230818025227_Init")]
-    partial class Init
+    [Migration("20230818035809_RemoveLineTotal")]
+    partial class RemoveLineTotal
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,7 +44,7 @@ namespace TodoApp.Order.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Order");
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("TodoApp.Order.Domain.Entities.OrderDetail", b =>
@@ -54,9 +54,6 @@ namespace TodoApp.Order.API.Migrations
 
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<decimal>("LineTotal")
-                        .HasColumnType("numeric");
 
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
@@ -81,7 +78,7 @@ namespace TodoApp.Order.API.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderDetail");
+                    b.ToTable("OrderDetails");
                 });
 
             modelBuilder.Entity("TodoApp.Order.Domain.Entities.OrderDetail", b =>

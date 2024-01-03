@@ -1,6 +1,6 @@
 ﻿using MediatR;
-using TodoApp.Order.API.Infrastructure;
 using TodoApp.Order.Domain.Entities;
+using TodoApp.Order.Infrastructure.Persistence;
 
 namespace TodoApp.Order.API.Features.Create;
 
@@ -16,7 +16,9 @@ public class OrderCreateCommandHandler : IRequestHandler<OrderCreateCommand, Gui
     public Task<Guid> Handle(OrderCreateCommand request, CancellationToken cancellationToken)
     {
         var order = new order.Order(request.UserId, request.Items.Select(y => new OrderDetail(y.ProductId, y.ProductName, y.UnitPrice, y.Quantity)).ToList());
+        order.AddOrderCreatedIntegrationEvent();
         _orderDbContext.Orders.Add(order);
         return Task.FromResult(order.Id);
     }
+
 }

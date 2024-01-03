@@ -1,16 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace TodoApp.Order.API.Infrastructure.Mappings;
 
-public class OrderDetailEntityTypeConfiguration : IEntityTypeConfiguration<order.OrderDetail>
+namespace TodoApp.Order.Infrastructure.Persistence.Mappings;
+
+public class OrderEntityTypeConfiguration : IEntityTypeConfiguration<Domain.Entities.Order>
 {
-    public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<order.OrderDetail> builder)
+    public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<Domain.Entities.Order> builder)
     {
         builder.Property(product => product.Id)
             .ValueGeneratedNever()
             .IsRequired();
-
-        builder.Ignore(product => product.LineTotal);
 
         builder.Property(product => product.CreateAt)
             .UsePropertyAccessMode(PropertyAccessMode.PreferFieldDuringConstruction)

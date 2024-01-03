@@ -21,11 +21,11 @@ public class OrderDetail : IEntity<Guid>, ICreatableEntity, IModifiableEntity
 
     }
 
-    public OrderDetail(Guid productId, string productName, decimal unitPrice, int quanlity)
+    public OrderDetail(Guid productId, string productName, decimal unitPrice, int quantity)
     {
         ProductId = productId;
         ProductName = productName;
         UnitPrice = unitPrice;
-        Quantity = quanlity;
+        Quantity = quantity;
     }
 }

@@ -6,9 +6,10 @@ using TodoApp.Application.Core.Extensions;
 using TodoApp.Application.Core.Middlewares;
 using TodoApp.Infrastructure.Core.Extensions;
 using TodoApp.Infrastructure.Core.Handlers;
+using TodoApp.Infrastructure.Core.ServiceInvocation.Dapr;
 using TodoApp.Order.API.Features;
-using TodoApp.Order.API.Infrastructure;
-using TodoApp.Order.API.Infrastructure.Handlers;
+using TodoApp.Order.Infrastructure.Handlers;
+using TodoApp.Order.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +38,7 @@ builder.Services
     .AddValidator(transactionsAssembly)
     .AddSingleton<IExceptionHandler, ExceptionHandler>()
     .AddUnitOfWork<OrderDbContext>()
+    .AddDaprClient()
     .AddOpenTelemetryConfiguration(
         serviceName: "order",
         serviceNamespace: "todo-app",
@@ -55,13 +57,13 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
-
+app.UseRouting();
 app.MapOrderApiRoutes();
 
 await app.Services.ApplyMigrationsAsync<OrderDbContext>();
 
-app.Run();
 
+app.Run();
 
 [ExcludeFromCodeCoverage]
 public partial class Program

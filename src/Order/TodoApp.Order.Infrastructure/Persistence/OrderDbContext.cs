@@ -1,8 +1,9 @@
 ﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using TodoApp.Infrastructure.Core.Interceptors;
+using TodoApp.Order.Domain.Entities;
 
-namespace TodoApp.Order.API.Infrastructure;
+namespace TodoApp.Order.Infrastructure.Persistence;
 
 public class OrderDbContext : DbContext
 {
@@ -26,6 +27,6 @@ public class OrderDbContext : DbContext
         base.OnConfiguring(optionsBuilder);
     }
 
-    public DbSet<order.Order> Orders { get; set; }
-    public DbSet<order.OrderDetail> OrderDetails { get; set; }
+    public DbSet<Domain.Entities.Order> Orders { get; set; }
+    public DbSet<OrderDetail> OrderDetails { get; set; }
 }

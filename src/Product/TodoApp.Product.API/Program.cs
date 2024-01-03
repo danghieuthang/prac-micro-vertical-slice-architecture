@@ -1,12 +1,16 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using Dapr;
+using MediatR;
 using MediatR.NotificationPublishers;
 using TodoApp.Application.Core.Behaviors;
 using TodoApp.Application.Core.Extensions;
 using TodoApp.Application.Core.Middlewares;
 using TodoApp.Infrastructure.Core.Extensions;
 using TodoApp.Infrastructure.Core.Handlers;
+using TodoApp.Messaging.Contracts;
 using TodoApp.Product.API.Features;
+using TodoApp.Product.API.Features.Update;
 using TodoApp.Product.Infrastructure.Handlers;
 using TodoApp.Product.Infrastructure.Persistence;
 
@@ -56,8 +60,24 @@ app.UseHttpsRedirection();
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 
-app.MapProductApiRoutes();
+app.UseRouting();
 
+app.MapProductApiRoutes();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapSubscribeHandler();
+    var orderCreatedTopic = new TopicOptions
+    {
+        PubsubName = "productpubsub",
+        Name = "productordered",
+        DeadLetterTopic = "productorderedDeadLetterTopic"
+    };
+    endpoints.MapPost("subcribe_productOrdered", async (OrderCreatedIntegrationEvent @event, ISender sender) =>
+    {
+        await sender.Send(
+            new ProductOrderCommand(@event.Items.Select(x => new ProductOderItem(x.ProductId, x.Quantity))));
+    }).WithTopic(orderCreatedTopic);
+});
 await app.Services.ApplyMigrationsAsync<ProductDbContext>();
 
 app.Run();

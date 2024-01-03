@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TodoApp.Domain.Core;
 
 namespace TodoApp.Infrastructure.Core.Mappings;
-public class EntitiesTypeConfiguration<TEntity, TID> : IEntityTypeConfiguration<TEntity> where TEntity : class, IEntity<TID>
+public class EntitiesTypeConfiguration<TEntity, TId> : IEntityTypeConfiguration<TEntity> where TEntity : class, IEntity<TId>
 {
     public void Configure(EntityTypeBuilder<TEntity> builder)
     {

@@ -5,18 +5,11 @@ using TodoApp.Product.Infrastructure.Persistence;
 
 namespace TodoApp.Product.API.Features.Update;
 
-public class ProductUpdateCommandHandler : IRequestHandler<ProductUpdateCommand, Guid>
+public class ProductUpdateCommandHandler(ProductDbContext productDbContext) : IRequestHandler<ProductUpdateCommand, Guid>
 {
-    private readonly ProductDbContext _productDbContext;
-
-    public ProductUpdateCommandHandler(ProductDbContext productDbContext)
-    {
-        _productDbContext = productDbContext;
-    }
-
     public async Task<Guid> Handle(ProductUpdateCommand request, CancellationToken cancellationToken)
     {
-        var product = await _productDbContext.Products.FirstOrDefaultAsync(x => x.Id == request.Id).ConfigureAwait(false);
+        var product = await productDbContext.Products.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken: cancellationToken).ConfigureAwait(false);
         if (product == null)
         {
             throw new ProductNotFoundException($"Product not found {request.Id}");
@@ -24,7 +17,7 @@ public class ProductUpdateCommandHandler : IRequestHandler<ProductUpdateCommand,
         product.Quantity = request.Quantity;
         product.Name = request.Name;
         product.Price = request.Price;
-        _productDbContext.Update(product);
+        productDbContext.Update(product);
         return product.Id;
     }
 }

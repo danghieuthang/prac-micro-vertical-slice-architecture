@@ -1,7 +1,9 @@
 ﻿using TodoApp.Domain.Core;
+using TodoApp.Messaging.Contracts;
+using TodoApp.Order.Domain.Events;
 
 namespace TodoApp.Order.Domain.Entities;
-public class Order : IEntity<Guid>, ICreatableEntity, IModifiableEntity
+public class Order : AggregateRoot<Guid>, ICreatableEntity, IModifiableEntity
 {
     public Guid Id { get; private set; }
     public DateTime CreateAt { get; set; }
@@ -22,5 +24,12 @@ public class Order : IEntity<Guid>, ICreatableEntity, IModifiableEntity
         UserId = userId;
         OrderDetails = items;
         OrderTotal = items.Sum(x => x.Quantity * x.UnitPrice);
+    }
+
+    public void AddOrderCreatedIntegrationEvent()
+    {
+        var items = OrderDetails.Select(x => new OrderCreateDomainEventItem(x.ProductId, x.Quantity));
+        var @event = new OrderCreateDomainEvent(Id, items);
+        AddDomainEvent(@event);
     }
 }

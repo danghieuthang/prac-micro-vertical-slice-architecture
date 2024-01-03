@@ -19,6 +19,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\TodoApp.Application.Core\TodoApp.Application.Core.csproj" />
+    <ProjectReference Include="..\..\Core\TodoApp.Messaging.Contracts\TodoApp.Messaging.Contracts.csproj" />
     <ProjectReference Include="..\TodoApp.Product.Domain\TodoApp.Product.Domain.csproj" />
     <ProjectReference Include="..\TodoApp.Product.Infrastructure\TodoApp.Product.Infrastructure.csproj" />
   </ItemGroup>
