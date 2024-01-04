@@ -14,10 +14,10 @@ using TodoApp.Product.API.Features.Update;
 using TodoApp.Product.Infrastructure.Handlers;
 using TodoApp.Product.Infrastructure.Persistence;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-var productAssembly = typeof(Program).Assembly;
-var productAssemblyName = productAssembly.GetName();
+Assembly productAssembly = typeof(Program).Assembly;
+AssemblyName productAssemblyName = productAssembly.GetName();
 
 builder.Logging.ConfigureSerilogForOpenTelemetry();
 
@@ -42,12 +42,12 @@ builder.Services
     .AddSingleton<IExceptionHandler, ExceptionHandler>()
     .AddUnitOfWork<ProductDbContext>()
     .AddOpenTelemetryConfiguration(
-        serviceName: "product",
-        serviceNamespace: "todo-app",
-        serviceVersion: productAssemblyName.Version?.ToString() ?? null
+        "product",
+        "todo-app",
+        productAssemblyName.Version?.ToString() ?? null
     );
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -66,11 +66,9 @@ app.MapProductApiRoutes();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapSubscribeHandler();
-    var orderCreatedTopic = new TopicOptions
+    TopicOptions orderCreatedTopic = new()
     {
-        PubsubName = "productpubsub",
-        Name = "productordered",
-        DeadLetterTopic = "productorderedDeadLetterTopic"
+        PubsubName = "productpubsub", Name = "productordered", DeadLetterTopic = "productorderedDeadLetterTopic"
     };
     endpoints.MapPost("subcribe_productOrdered", async (OrderCreatedIntegrationEvent @event, ISender sender) =>
     {
@@ -78,6 +76,7 @@ app.UseEndpoints(endpoints =>
             new ProductOrderCommand(@event.Items.Select(x => new ProductOderItem(x.ProductId, x.Quantity))));
     }).WithTopic(orderCreatedTopic);
 });
+
 await app.Services.ApplyMigrationsAsync<ProductDbContext>();
 
 app.Run();
@@ -87,5 +86,6 @@ app.Run();
 public partial class Program
 {
     protected Program()
-    { }
+    {
+    }
 }

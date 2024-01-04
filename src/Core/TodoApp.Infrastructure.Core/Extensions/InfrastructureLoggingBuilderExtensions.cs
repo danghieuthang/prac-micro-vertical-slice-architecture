@@ -2,6 +2,7 @@
 using Serilog;
 
 namespace TodoApp.Infrastructure.Core.Extensions;
+
 public static class InfrastructureLoggingBuilderExtensions
 {
     public static ILoggingBuilder ConfigureSerilogForOpenTelemetry(this ILoggingBuilder builder)

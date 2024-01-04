@@ -1,0 +1,17 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: productpubsub
+spec:
+  # type: pubsub.rabbitmq
+  # version: v1
+  # metadata:
+  # - name: connectionString
+  #   value: amqp://guest:guest@localhost:5672
+  type: pubsub.redis
+  version: v1
+  metadata:
+  - name: redisHost
+    value: localhost:6379
+  - name: redisPassword
+    value: ""

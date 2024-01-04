@@ -23,6 +23,7 @@ public class OrderDetail : IEntity<Guid>, ICreatableEntity, IModifiableEntity
 
     public OrderDetail(Guid productId, string productName, decimal unitPrice, int quantity)
     {
+        Id = Guid.NewGuid();
         ProductId = productId;
         ProductName = productName;
         UnitPrice = unitPrice;
