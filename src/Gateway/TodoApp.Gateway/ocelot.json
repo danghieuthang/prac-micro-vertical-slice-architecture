@@ -2,27 +2,27 @@
   "Routes": [
     {
       "DownstreamPathTemplate": "/api/{everything}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7233
+          "Port": 15002
         }
       ],
-      "UpstreamPathTemplate": "/order-api/api/{everything}",
+      "UpstreamPathTemplate": "/order-service/api/{everything}",
       "UpstreamHttpMethod": [ "POST", "PUT", "GET", "PATCH", "DELETE" ],
       "SwaggerKey": "orders"
     },
     {
       "DownstreamPathTemplate": "/api/{everything}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7040
+          "Port": 15001
         }
       ],
-      "UpstreamPathTemplate": "/product-api/api/{everything}",
+      "UpstreamPathTemplate": "/product-service/api/{everything}",
       "UpstreamHttpMethod": [ "POST", "GET", "PUT" ],
       "SwaggerKey": "products"
     }
@@ -34,7 +34,7 @@
         {
           "Name": "Order API",
           "Version": "v1",
-          "Url": "https://localhost:7233/swagger/v1/swagger.json"
+          "Url": "https://localhost:15002/swagger/v1/swagger.json"
         }
       ]
     },
@@ -44,7 +44,7 @@
         {
           "Name": "Product API",
           "Version": "v1",
-          "Url": "https://localhost:7040/swagger/v1/swagger.json"
+          "Url": "https://localhost:15001/swagger/v1/swagger.json"
         }
       ]
     }
