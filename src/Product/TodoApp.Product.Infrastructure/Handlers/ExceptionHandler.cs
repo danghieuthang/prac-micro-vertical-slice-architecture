@@ -4,15 +4,14 @@ using Microsoft.Extensions.Logging;
 using TodoApp.Application.Core.Exceptions;
 using TodoApp.Infrastructure.Core.Handlers;
 using TodoApp.Product.Domain.Exceptions;
-using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace TodoApp.Product.Infrastructure.Handlers;
 
 public class ExceptionHandler : IExceptionHandler
 {
-    private readonly ILogger _logger;
+    private readonly ILogger<ExceptionHandler> _logger;
 
-    public ExceptionHandler(ILogger logger)
+    public ExceptionHandler(ILogger<ExceptionHandler> logger)
     {
         _logger = logger;
     }
@@ -28,11 +27,12 @@ public class ExceptionHandler : IExceptionHandler
 
             case ProductNotFoundException productNotFoundException:
                 httpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                _logger.LogError(productNotFoundException.Message);
                 await httpContext.Response.WriteAsJsonAsync(new { Error = productNotFoundException.Message });
                 return;
             default:
                 httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                _logger.LogError(exception.StackTrace);
+                _logger.LogError("Something went wrong: ",exception.StackTrace);
                 await httpContext.Response.WriteAsJsonAsync(new
                 {
                     Error = "Unexpected error. Please contact the support."

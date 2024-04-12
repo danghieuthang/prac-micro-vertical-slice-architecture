@@ -26,26 +26,14 @@ services:
     environment:
       - ASPNETCORE_URLS=http://+:5001
       - ApplicationName=product-api
+      - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__ProductDbContext=Host=postgres;Database=TodoAppProduct;Username=postgres;Password=1;Port=5432
+      - RabbitMQ__Host=rabitmq
     ports:
       - "5001:5001"
     restart: always
     networks:
       - todo-app-network
-  product-api-dapr:
-    image: "daprio/daprd:1.11.2"
-    command: [ "./daprd",
-               "-app-id", "product-api",
-               "-app-port", "5001",
-               "-placement-host-address", "placement:50006",
-               "-config", "/components/daprConfig.yaml",
-               "-resources-path", "/components",
-               "-log-level","debug" ]
-    volumes:
-      - "./components-docker/:/components"
-    depends_on:
-      - product-api
-    network_mode: "service:product-api"
   order-api:
     image: ${DOCKER_REGISTRY-}order-api
     container_name: order-api
@@ -55,36 +43,16 @@ services:
     environment:
       - ASPNETCORE_URLS=http://+:5002
       - ApplicationName=order-api
+      - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__OrderDbContext=Host=postgres;Database=TodoAppOrder;Username=postgres;Password=1;Port=5432
+      - RabbitMQ__Host=rabitmq
     ports:
       - "5002:5002"
     restart: always
     networks:
       - todo-app-network
-  order-api-dapr:
-    image: "daprio/daprd:1.11.2"
-    command: [ "./daprd",
-               "-app-id", "order-api",
-               "-app-port", "5002",
-               "-placement-host-address", "placement:50006",
-               "-config", "/components/daprConfig.yaml",
-               "-resources-path", "/components",
-               "-log-level","debug" ]
-    volumes:
-      - "./components-docker/:/components"
-    depends_on:
-      - order-api
-    network_mode: "service:order-api"
-    ############################
-  # Dapr placement service
-  ############################
-  placement:
-    image: "daprio/dapr:1.11.2"
-    command: [ "./placement", "-port", "50006" ]
-    ports:
-      - "50006:50006"
-    networks:
-      - todo-app-network
+
+
   ############################
   # Zipkin component
   ############################
@@ -96,6 +64,21 @@ services:
     networks:
       - todo-app-network
 
+  collector:
+    container_name: collector
+    image: otel/opentelemetry-collector-contrib:0.78.0
+    command: ["--config=/etc/otel-collector-config.yml"]
+    volumes:
+      - ./otel-collector-config.yml:/etc/otel-collector-config.yml
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+      - "8888:8888"
+      - "8889:8889"
+      - "13133:13133"
+    depends_on:
+      - zipkin
+
   ############################
   # Redis state store
   ############################
@@ -105,19 +88,18 @@ services:
       - "6379:6379"
     networks:
       - todo-app-network
-  # rabbitmq:
-  #   container_name: rabbitmq
-  #   image: rabbitmq:3.10.7-management
-  #   environment:
-  #     - RABBITMQ_DEFAULT_USER=guest
-  #     - RABBITMQ_DEFAULT_PASS=guest
-  #   ports:
-  #     - "5672:5672"
-  #     - "15672:15672"
-  #   volumes:
-  #     - rabbitmq-data:/var/lib/rabbitmq/
-  #   networks:
-  #     - todo-app-network
+
+  rabbitmq:
+    image: rabbitmq:3.10.7-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - todo-app-network
+
 volumes:
   postgres-data:
     external: false

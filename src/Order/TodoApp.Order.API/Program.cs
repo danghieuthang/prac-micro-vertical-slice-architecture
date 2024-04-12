@@ -7,16 +7,19 @@ using TodoApp.Application.Core.Middlewares;
 using TodoApp.Infrastructure.Core.Extensions;
 using TodoApp.Infrastructure.Core.Handlers;
 using TodoApp.Infrastructure.Core.ServiceInvocation.Dapr;
+using TodoApp.Infrastructure.Core.ServiceInvocation.MassTransit;
 using TodoApp.Order.API.Features;
 using TodoApp.Order.Infrastructure.Handlers;
 using TodoApp.Order.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var transactionsAssembly = typeof(Program).Assembly;
-var transactionsAssemblyName = transactionsAssembly.GetName();
+var orderAssumbly = typeof(Program).Assembly;
+var orderAssemblyName = orderAssumbly.GetName();
 
-builder.Logging.ConfigureSerilogForOpenTelemetry();
+builder.Logging.AddOpenTelemetryLogs(serviceName: "order-api",
+        serviceNamespace: "todo-app",
+        serviceVersion: orderAssemblyName.Version?.ToString() ?? null);
 
 builder.Services
     .AddEndpointsApiExplorer()
@@ -35,14 +38,14 @@ builder.Services
         configuration.AddOpenBehavior(typeof(ResilientTransactionBehavior<,>));
         configuration.NotificationPublisherType = typeof(TaskWhenAllPublisher);
     })
-    .AddValidator(transactionsAssembly)
+    .AddValidator(orderAssumbly)
     .AddSingleton<IExceptionHandler, ExceptionHandler>()
     .AddUnitOfWork<OrderDbContext>()
-    .AddDaprClient()
+    .AddRabbitMqMessaging(builder.Configuration, orderAssumbly)
     .AddOpenTelemetryConfiguration(
-        serviceName: "order",
+        serviceName: "order-api",
         serviceNamespace: "todo-app",
-        serviceVersion: transactionsAssemblyName.Version?.ToString() ?? null
+        serviceVersion: orderAssemblyName.Version?.ToString() ?? null
     );
 
 var app = builder.Build();
@@ -58,6 +61,8 @@ app.UseHttpsRedirection();
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 app.UseRouting();
+
+app.Map("/", () => Results.Redirect("/swagger"));
 app.MapOrderApiRoutes();
 
 await app.Services.ApplyMigrationsAsync<OrderDbContext>();

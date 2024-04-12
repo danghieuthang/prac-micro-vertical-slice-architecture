@@ -26,7 +26,7 @@ public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
 
         try
         {
-            _logger.LogInformation("[{Behavior}] - Handling request of type {RequestType}", behaviorName, requestType);
+            _logger.LogInformation(@"[{Behavior}] - Handling request of type {RequestType}", behaviorName, requestType);
 
             var response = await next().ConfigureAwait(continueOnCapturedContext: false);
 

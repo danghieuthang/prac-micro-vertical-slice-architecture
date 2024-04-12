@@ -1,5 +1,7 @@
-﻿using MediatR;
+﻿using Dapr;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using TodoApp.Messaging.Contracts;
 using TodoApp.Product.API.Features.Create;
 using TodoApp.Product.API.Features.Detail;
 using TodoApp.Product.API.Features.List;
@@ -17,7 +19,26 @@ public static class ProductEndpoints
         builder.MapPut("/api/v1/products", ProductEndpoints.PutAsync);
 
         return builder;
-    }
+    }  
+    
+    //public static IEndpointRouteBuilder MapProductSubcribeHandlers(this IEndpointRouteBuilder builder)
+    //{
+    //    builder.MapSubscribeHandler();
+
+    //    TopicOptions orderCreatedTopic = new()
+    //    {
+    //        PubsubName = "productpubsub",
+    //        Name = "productordered",
+    //        DeadLetterTopic = "productorderedDeadLetterTopic"
+    //    };
+    //    builder.MapPost("subcribe_productOrdered", async (OrderCreatedIntegrationEvent @event, ISender sender) =>
+    //    {
+    //        await sender.Send(
+    //            new ProductOrderCommand(@event.Items.Select(x => new ProductOderItem(x.ProductId, x.Quantity))));
+    //    }).WithTopic(orderCreatedTopic);
+
+    //    return builder;
+    //}
 
     public static async Task<IResult> GetAsync(
        [FromServices] IMediator mediator,

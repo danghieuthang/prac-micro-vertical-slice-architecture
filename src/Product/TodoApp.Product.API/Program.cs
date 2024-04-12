@@ -8,6 +8,7 @@ using TodoApp.Application.Core.Extensions;
 using TodoApp.Application.Core.Middlewares;
 using TodoApp.Infrastructure.Core.Extensions;
 using TodoApp.Infrastructure.Core.Handlers;
+using TodoApp.Infrastructure.Core.ServiceInvocation.MassTransit;
 using TodoApp.Messaging.Contracts;
 using TodoApp.Product.API.Features;
 using TodoApp.Product.API.Features.Update;
@@ -19,7 +20,9 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 Assembly productAssembly = typeof(Program).Assembly;
 AssemblyName productAssemblyName = productAssembly.GetName();
 
-builder.Logging.ConfigureSerilogForOpenTelemetry();
+builder.Logging.AddOpenTelemetryLogs("product-api",
+        "todo-app",
+        productAssemblyName.Version?.ToString() ?? null);
 
 builder.Services
     .AddEndpointsApiExplorer()
@@ -41,8 +44,9 @@ builder.Services
     .AddValidator(productAssembly)
     .AddSingleton<IExceptionHandler, ExceptionHandler>()
     .AddUnitOfWork<ProductDbContext>()
+    .AddRabbitMqMessaging(builder.Configuration, productAssembly)
     .AddOpenTelemetryConfiguration(
-        "product",
+        "product-api",
         "todo-app",
         productAssemblyName.Version?.ToString() ?? null
     );
@@ -62,20 +66,9 @@ app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 app.UseRouting();
 
+app.Map("/", () => Results.Redirect("/swagger"));
 app.MapProductApiRoutes();
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapSubscribeHandler();
-    TopicOptions orderCreatedTopic = new()
-    {
-        PubsubName = "productpubsub", Name = "productordered", DeadLetterTopic = "productorderedDeadLetterTopic"
-    };
-    endpoints.MapPost("subcribe_productOrdered", async (OrderCreatedIntegrationEvent @event, ISender sender) =>
-    {
-        await sender.Send(
-            new ProductOrderCommand(@event.Items.Select(x => new ProductOderItem(x.ProductId, x.Quantity))));
-    }).WithTopic(orderCreatedTopic);
-});
+//app.MapProductSubcribeHandlers();
 
 await app.Services.ApplyMigrationsAsync<ProductDbContext>();
 
