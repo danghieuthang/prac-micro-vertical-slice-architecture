@@ -1,0 +1,30 @@
+<Solution>
+  <Folder Name="/assets/" />
+  <Folder Name="/Solution Items/">
+    <File Path="docker-compose.yml" />
+    <File Path="otel-collector-config.yml" />
+    <File Path="prometheus.yml" />
+  </Folder>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Account/" />
+  <Folder Name="/src/Core/">
+    <Project Path="src/Core/TodoApp.Application.Core/TodoApp.Application.Core.csproj" />
+    <Project Path="src/Core/TodoApp.Domain.Core/TodoApp.Domain.Core.csproj" />
+    <Project Path="src/Core/TodoApp.Infrastructure.Core/TodoApp.Infrastructure.Core.csproj" />
+    <Project Path="src/Core/TodoApp.Messaging.Contracts/TodoApp.Messaging.Contracts.csproj" />
+  </Folder>
+  <Folder Name="/src/Gateway/">
+    <Project Path="src/Gateway/TodoApp.Gateway/TodoApp.Gateway.csproj" />
+  </Folder>
+  <Folder Name="/src/Identity/" />
+  <Folder Name="/src/Order/">
+    <Project Path="src/Order/TodoApp.Order.API/TodoApp.Order.API.csproj" />
+    <Project Path="src/Order/TodoApp.Order.Domain/TodoApp.Order.Domain.csproj" />
+    <Project Path="src/Order/TodoApp.Order.Infrastructure/TodoApp.Order.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Product/">
+    <Project Path="src/Product/TodoApp.Product.API/TodoApp.Product.API.csproj" />
+    <Project Path="src/Product/TodoApp.Product.Domain/TodoApp.Product.Domain.csproj" />
+    <Project Path="src/Product/TodoApp.Product.Infrastructure/TodoApp.Product.Infrastructure.csproj" />
+  </Folder>
+</Solution>

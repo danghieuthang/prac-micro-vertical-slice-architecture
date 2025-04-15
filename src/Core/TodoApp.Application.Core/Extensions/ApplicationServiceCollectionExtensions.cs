@@ -1,5 +1,7 @@
 ﻿using System.Reflection;
 using FluentValidation;
+using MassTransit.Logging;
+using MassTransit.Monitoring;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry.Logs;
@@ -31,7 +33,7 @@ public static class ApplicationServiceCollectionExtensions
                     serviceVersion: serviceVersion,
                     autoGenerateServiceInstanceId: true
                 ))
-            .AddConsoleExporter();
+            .AddOtlpExporter();
         });
 
         return builder;
@@ -53,29 +55,32 @@ public static class ApplicationServiceCollectionExtensions
                 )
                 .AddEnvironmentVariableDetector()
             )
-            //.WithTracing(tracer => tracer
-            //    .SetSampler<AlwaysOnSampler>()
-            //    .AddAspNetCoreInstrumentation()
-            //    //.AddEntityFrameworkCoreInstrumentation(options => options.SetDbStatementForText = true)
-            //    .AddSource("MassTransit")
-            //    .AddOtlpExporter()
-            //)
-            //.WithMetrics(meter => meter
-            //    .AddAspNetCoreInstrumentation()
-            //    .AddRuntimeInstrumentation()
-            //    .AddEventCountersInstrumentation(options => options
-            //        .AddEventSources(
-            //            "Microsoft.AspNetCore.Hosting",
-            //            "Microsoft.AspNetCore.Http.Connections",
-            //            "Microsoft-AspNetCore-Server-Kestrel",
-            //            "System.Net.Http",
-            //            "System.Net.NameResolution",
-            //            "System.Net.Security"
-            //        )
-            //    )
-            //    .AddOtlpExporter()
-            //)
-            ;
+            .WithTracing(tracer => tracer
+                .SetSampler<AlwaysOnSampler>()
+                .AddAspNetCoreInstrumentation()
+                //.AddEntityFrameworkCoreInstrumentation(options => options.SetDbStatementForText = true)
+                .AddSource(DiagnosticHeaders.DefaultListenerName) // MassTransit activity source
+                .AddOtlpExporter(oltpOption =>
+                {
+                    oltpOption.Endpoint = new Uri("http://localhost:4317");
+                })
+            )
+            .WithMetrics(meter => meter
+                .AddAspNetCoreInstrumentation()
+                .AddRuntimeInstrumentation()
+                .AddEventCountersInstrumentation(options => options
+                    .AddEventSources(
+                        "Microsoft.AspNetCore.Hosting",
+                        "Microsoft.AspNetCore.Http.Connections",
+                        "Microsoft-AspNetCore-Server-Kestrel",
+                        "System.Net.Http",
+                        "System.Net.NameResolution",
+                        "System.Net.Security"
+                    )
+                )
+                .AddMeter(InstrumentationOptions.MeterName) // MassTransit Meter
+                .AddOtlpExporter()
+            );
 
         return services;
     }

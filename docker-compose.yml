@@ -28,7 +28,7 @@ services:
       - ApplicationName=product-api
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__ProductDbContext=Host=postgres;Database=TodoAppProduct;Username=postgres;Password=1;Port=5432
-      - RabbitMQ__Host=rabitmq
+      - RabbitMQ__Host=rabbitmq
     ports:
       - "5001:5001"
     restart: always
@@ -45,7 +45,7 @@ services:
       - ApplicationName=order-api
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__OrderDbContext=Host=postgres;Database=TodoAppOrder;Username=postgres;Password=1;Port=5432
-      - RabbitMQ__Host=rabitmq
+      - RabbitMQ__Host=rabbitmq
     ports:
       - "5002:5002"
     restart: always
@@ -59,8 +59,22 @@ services:
   zipkin:
     image: openzipkin/zipkin:latest
     container_name: zipkin
+    restart: always
     ports:
       - "9411:9411"
+    networks:
+      - todo-app-network
+  ############################
+  # Prometheus component
+  ############################
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    volumes:
+      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
+    restart: always
+    ports:
+      - "9090:9090"
     networks:
       - todo-app-network
 
@@ -71,14 +85,17 @@ services:
     volumes:
       - ./otel-collector-config.yml:/etc/otel-collector-config.yml
     ports:
-      - "4317:4317"
-      - "4318:4318"
-      - "8888:8888"
-      - "8889:8889"
-      - "13133:13133"
+      - "1888:1888" # pprof extension
+      - "4317:4317" # OTLP gRPC receiver
+      - "4318:4318" 
+      - "8888:8888" # Prometheus metrics exposed by the collector
+      - "8889:8889" # Prometheus exporter metrics
+      - "13133:13133" # health_check extension
     depends_on:
       - zipkin
-
+      - prometheus   
+    networks:
+      - todo-app-network
   ############################
   # Redis state store
   ############################

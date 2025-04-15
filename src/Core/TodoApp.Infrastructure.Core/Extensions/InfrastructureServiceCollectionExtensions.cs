@@ -28,7 +28,7 @@ public static class InfrastructureServiceCollectionExtensions
         if (enableSecondLevelCache)
         {
             services.AddEFSecondLevelCache(options =>
-                options.UseMemoryCacheProvider().DisableLogging(value: true)
+                options.UseMemoryCacheProvider().ConfigureLogging(enable: false)
             );
         }
 
