@@ -21,7 +21,7 @@ internal static class ContextSeed
             new Product.Domain.Entities.Product("Product 5", 2, 24.99m)
         };
 
-        products.ForEach(x => x.CreateAt = DateTime.UtcNow);
+        products.ForEach(x => x.CreateAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
 
         modelBuilder.Entity<Product.Domain.Entities.Product>().HasData(products);
     }

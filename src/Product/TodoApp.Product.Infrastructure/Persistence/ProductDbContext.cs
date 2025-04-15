@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using TodoApp.Infrastructure.Core.Interceptors;
-using TodoApp.Product.Infrastructure.Persistence.Seeds;
 
 namespace TodoApp.Product.Infrastructure.Persistence;
 
@@ -18,7 +17,6 @@ public class ProductDbContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.Load("TodoApp.Infrastructure.Core"));
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ProductDbContext).Assembly);
         base.OnModelCreating(modelBuilder);
-        modelBuilder.Seed();
 
     }
 
