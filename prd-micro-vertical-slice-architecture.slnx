@@ -5,24 +5,26 @@
     <File Path="otel-collector-config.yml" />
     <File Path="prometheus.yml" />
   </Folder>
-  <Folder Name="/src/" />
-  <Folder Name="/src/Account/" />
-  <Folder Name="/src/Core/">
+  <Folder Name="/src/">
+    <Project Path="src/AspireAppHost/AspireAppHost.csproj" Id="867672a3-8271-4c73-812b-258d39269ca4" />
+  </Folder>
+  <Folder Name="/src/Account/" Id="03708b82-e485-008f-a4f0-ad8607f9b836" />
+  <Folder Name="/src/Core/" Id="8d626ea8-cb54-bc41-363a-217881beba6e">
     <Project Path="src/Core/TodoApp.Application.Core/TodoApp.Application.Core.csproj" />
     <Project Path="src/Core/TodoApp.Domain.Core/TodoApp.Domain.Core.csproj" />
     <Project Path="src/Core/TodoApp.Infrastructure.Core/TodoApp.Infrastructure.Core.csproj" />
     <Project Path="src/Core/TodoApp.Messaging.Contracts/TodoApp.Messaging.Contracts.csproj" />
   </Folder>
-  <Folder Name="/src/Gateway/">
+  <Folder Name="/src/Gateway/" Id="6306a8fb-679e-111f-6585-8f70e0ee6013">
     <Project Path="src/Gateway/TodoApp.Gateway/TodoApp.Gateway.csproj" />
   </Folder>
-  <Folder Name="/src/Identity/" />
-  <Folder Name="/src/Order/">
+  <Folder Name="/src/Identity/" Id="65abfb5d-2b10-df64-bf12-c17976f8e5d9" />
+  <Folder Name="/src/Order/" Id="8f24db20-97a3-5c9a-fc1b-8cea0608774b">
     <Project Path="src/Order/TodoApp.Order.API/TodoApp.Order.API.csproj" />
     <Project Path="src/Order/TodoApp.Order.Domain/TodoApp.Order.Domain.csproj" />
     <Project Path="src/Order/TodoApp.Order.Infrastructure/TodoApp.Order.Infrastructure.csproj" />
   </Folder>
-  <Folder Name="/src/Product/">
+  <Folder Name="/src/Product/" Id="7ebfc35f-cfb5-33fc-478c-bf5d9c05e6b6">
     <Project Path="src/Product/TodoApp.Product.API/TodoApp.Product.API.csproj" />
     <Project Path="src/Product/TodoApp.Product.Domain/TodoApp.Product.Domain.csproj" />
     <Project Path="src/Product/TodoApp.Product.Infrastructure/TodoApp.Product.Infrastructure.csproj" />

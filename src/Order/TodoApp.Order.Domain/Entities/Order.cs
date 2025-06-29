@@ -10,12 +10,14 @@ public class Order : AggregateRoot<Guid>, ICreatableEntity, IModifiableEntity
     public DateTime? ModifiedAt { get; set; }
     public Guid UserId { get; set; }
     public decimal OrderTotal { get; set; }
+    public OrderStatus Status { get; set; }
 
     public ICollection<OrderDetail> OrderDetails { get; set; }
 
     public Order()
     {
-
+        OrderDetails = new List<OrderDetail>();
+        Status = OrderStatus.Pending;
     }
 
     public Order(Guid userId, ICollection<OrderDetail> items)
@@ -24,6 +26,7 @@ public class Order : AggregateRoot<Guid>, ICreatableEntity, IModifiableEntity
         UserId = userId;
         OrderDetails = items;
         OrderTotal = items.Sum(x => x.Quantity * x.UnitPrice);
+        Status = OrderStatus.Pending;
     }
 
     public void AddOrderCreatedIntegrationEvent()
